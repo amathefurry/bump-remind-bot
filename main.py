@@ -738,6 +738,7 @@ async def bumpstatus(
         _ = await interaction.response.send_message(
             "The bump timer has expired! You can bump right now.", ephemeral=True
         )
+        return
 
     # Discord renders this as a localized relative timestamp, e.g.
     # "in 1 hour" or "in 42 minutes".
