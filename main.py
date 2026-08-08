@@ -449,19 +449,19 @@ class BumpBot(commands.Bot):
     async def check_reminders(self) -> None:
         """
         Find and process reminders whose scheduled time has arrived.
-
-        The worker runs every ten seconds. This means the reminder can be
-        delayed by up to roughly ten seconds, which is negligible compared
-        with a two-hour bump cooldown.
+        Wrapped in a try/except to prevent temporary issues from killing the loop.
         """
-        now = time.time()
-        reminders = await asyncio.to_thread(
-            _db_get_due_reminders,
-            now,
-        )
+        try:
+            now = time.time()
+            reminders = await asyncio.to_thread(
+                _db_get_due_reminders,
+                now,
+            )
 
-        for reminder in reminders:
-            await self._process_reminder(reminder)
+            for reminder in reminders:
+                await self._process_reminder(reminder)
+        except Exception:
+            logger.exception("Error inside check_reminders task loop")
 
     async def _process_reminder(
         self,
