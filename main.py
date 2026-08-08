@@ -15,6 +15,7 @@ Database:
 from __future__ import annotations
 
 import asyncio
+import datetime
 import logging
 import os
 import sqlite3
@@ -740,9 +741,8 @@ async def bumpstatus(
         )
         return
 
-    # Discord renders this as a localized relative timestamp, e.g.
-    # "in 1 hour" or "in 42 minutes".
-    discord_timestamp = f"<t:{int(remind_at)}:R>"
+    dt_object = datetime.datetime.fromtimestamp(remind_at, tz=datetime.timezone.utc)
+    discord_timestamp = discord.utils.format_dt(dt_object, style="R")
     await interaction.response.send_message(
         f"The next bump reminder will be sent {discord_timestamp}.",
         ephemeral=True,
