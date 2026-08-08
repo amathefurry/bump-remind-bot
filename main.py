@@ -624,7 +624,8 @@ class BumpBot(commands.Bot):
         """
         if self.check_reminders.is_running():
             self.check_reminders.cancel()
-            await super().close()
+
+        await super().close()
 
 
 bot = BumpBot()
