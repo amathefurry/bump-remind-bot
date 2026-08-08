@@ -4,5 +4,5 @@ I started this project in JS but i switched to python and restarted it from scra
 
 CHANGELOG
 
-v 1.0
+version 1
 The code works after a friend of mine fixed some mistakes i've made.
