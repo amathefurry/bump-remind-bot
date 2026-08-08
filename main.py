@@ -1,10 +1,10 @@
-import discord
 import asyncio
+
+import discord
 from discord import app_commands
 
-
 try:
-    with open("token.txt", encoding="utf-8") as f: 
+    with open("token.txt", encoding="utf-8") as f:
         TOKEN = f.readline().strip()
 except FileNotFoundError:
     print(
@@ -15,7 +15,7 @@ except FileNotFoundError:
 
 
 try:
-    with open("role.txt", encoding="utf-8") as f: # REPLACE WITH A PER-SERVER SOLUTION
+    with open("role.txt", encoding="utf-8") as f:  # REPLACE WITH A PER-SERVER SOLUTION
         pingrole = f.readline().strip()
 except FileNotFoundError:
     pingrole = ""
