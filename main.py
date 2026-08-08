@@ -330,6 +330,9 @@ class BumpBot(commands.Bot):
         # does not block Discord.py's asyncio event loop.
         await asyncio.to_thread(_db_init)
 
+        # Register a global tree error handler
+        self.tree.on_error = self.on_tree_error
+
         # Start the persistent reminder worker.
         _ = self.check_reminders.start()
 
@@ -337,6 +340,21 @@ class BumpBot(commands.Bot):
         _ = await self.tree.sync()
 
         logger.info("Application command tree synchronized successfully.")
+
+    async def on_tree_error(
+        self, interaction: discord.Interaction, error: app_commands.AppCommandError
+    ) -> None:
+        """Global error handler for application/slash commands."""
+        logger.error(
+            "An error occurred in command %s: %s",
+            interaction.command.name if interaction.command else "unknown",
+            error,
+        )
+        message = "An unexpected error occurred while executing this command."
+        if interaction.response.is_done():
+            await interaction.followup.send(message, ephemeral=True)
+        else:
+            await interaction.response.send_message(message, ephemeral=True)
 
     async def on_ready(self) -> None:
         """Log successful Discord authentication."""
