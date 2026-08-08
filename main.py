@@ -27,7 +27,7 @@ except FileNotFoundError:
 intents = discord.Intents.all()
 
 
-class MyClient(discord.Client):
+class BumpRemindClient(discord.Client):
     def __init__(
         self,
         *,
@@ -78,7 +78,7 @@ allowed_mentions = discord.AllowedMentions(
 )
 
 
-client = MyClient(
+client = BumpRemindClient(
     intents=intents,
     allowed_mentions=allowed_mentions,
 )
