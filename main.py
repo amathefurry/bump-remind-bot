@@ -68,6 +68,9 @@ def _db_connect() -> sqlite3.Connection:
     """
     connection = sqlite3.connect(DB_PATH, timeout=10)
 
+    # Enable Write-Ahead Logging (WAL) for better concurrent read/write performance.
+    connection.execute("PRAGMA journal_mode=WAL;")
+
     # Return rows that can be access by column name as well as position.
     connection.row_factory = sqlite3.Row
     return connection
