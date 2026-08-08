@@ -20,7 +20,7 @@ import os
 import sqlite3
 import time
 from pathlib import Path
-from typing import cast, override
+from typing import override
 
 import discord
 from discord import app_commands
