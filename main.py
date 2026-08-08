@@ -2,8 +2,9 @@ import discord
 import asyncio
 from discord import app_commands
 
+
 try:
-    with open("token.txt", encoding="utf-8") as f:
+    with open("token.txt", encoding="utf-8") as f: 
         TOKEN = f.readline().strip()
 except FileNotFoundError:
     print(
