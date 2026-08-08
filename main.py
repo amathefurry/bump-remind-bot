@@ -29,23 +29,22 @@ intents = discord.Intents.all()
 
 class BumpRemindClient(discord.Client):
     def __init__(
-        self,
-        *,
-        intents: discord.Intents,
-        allowed_mentions: discord.AllowedMentions,
+        self, *, intents: discord.Intents, allowed_mentions: discord.AllowedMentions
     ):
-        super().__init__(
-            intents=intents,
-            allowed_mentions=allowed_mentions,
-        )
-
+        super().__init__(intents=intents, allowed_mentions=allowed_mentions)
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
         await self.tree.sync()
 
+    async def on_ready(self):
+        print(f"Logged in as {self.user}")
+
     async def on_message(self, message):
         global pingrole
+
+        if message.author == self.user:
+            return
 
         if message.author.id == 302050872383242240:
             if (
@@ -54,29 +53,22 @@ class BumpRemindClient(discord.Client):
                 and "Bump done!" in message.embeds[0].description
             ):
                 await asyncio.sleep(7199)
-
                 await message.channel.send(
                     pingrole,
                     allowed_mentions=discord.AllowedMentions(roles=True),
                 )
 
-        if message.author.id == 1155392571569356880:
-            if message.content == "testing":
-                await asyncio.sleep(3)
-
-                await message.channel.send(
-                    pingrole,
-                    allowed_mentions=discord.AllowedMentions(roles=True),
-                )
+        if message.author.id == 1155392571569356880 and message.content == "testing":
+            await asyncio.sleep(3)
+            await message.channel.send(
+                pingrole,
+                allowed_mentions=discord.AllowedMentions(roles=True),
+            )
 
 
 allowed_mentions = discord.AllowedMentions(
-    everyone=True,
-    users=True,
-    roles=True,
-    replied_user=True,
+    everyone=True, users=True, roles=True, replied_user=True
 )
-
 
 client = BumpRemindClient(
     intents=intents,
@@ -84,26 +76,16 @@ client = BumpRemindClient(
 )
 
 
-@client.event
-async def on_ready():
-    await client.tree.sync()
-    print(f"Logged in as {client.user}")
-
-
 @client.tree.command(name="configure", description="configure the bot")
 async def configure(interaction: discord.Interaction, role: discord.Role):
     global pingrole
-
     pingrole = role.mention
 
     with open("role.txt", "w", encoding="utf-8") as f:
         f.write(pingrole)
 
     await interaction.response.send_message(
-        content=(
-            f"{pingrole} from now on you will get pinged whenever "
-            "bumping is possible. Thank you for bumping our server."
-        ),
+        content=f"{pingrole} from now on you will get pinged whenever bumping is possible. Thank you for bumping our server.",
         allowed_mentions=discord.AllowedMentions(roles=True),
     )
 
